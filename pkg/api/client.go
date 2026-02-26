@@ -180,6 +180,55 @@ func (c *Client) Delete(path string, result interface{}) error {
 	return c.do(http.MethodDelete, path, nil, result)
 }
 
+// GetWithParams performs a GET with query parameters and decodes a single page response.
+// The response data field is unmarshalled into result (unwraps the "data" envelope).
+func (c *Client) GetWithParams(path string, params url.Values, result interface{}) error {
+	fullPath := path
+	if len(params) > 0 {
+		fullPath = path + "?" + params.Encode()
+	}
+
+	var lastErr error
+	backoff := time.Second
+
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		if attempt > 0 {
+			c.debugLog("Retry %d/%d after %s", attempt, maxRetries, backoff)
+			time.Sleep(backoff)
+			backoff *= 2
+		}
+
+		resp, respBody, err := c.doRequest(http.MethodGet, fullPath, nil)
+		if err != nil {
+			return err
+		}
+
+		if resp.StatusCode == http.StatusTooManyRequests {
+			lastErr = fmt.Errorf("rate limited (429)")
+			continue
+		}
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			return parseErrorResponse(resp.StatusCode, respBody)
+		}
+
+		// Unwrap the "data" field from the envelope
+		var envelope struct {
+			Data json.RawMessage `json:"data"`
+		}
+		if err := json.Unmarshal(respBody, &envelope); err != nil {
+			return fmt.Errorf("parse response envelope: %w", err)
+		}
+		if len(envelope.Data) == 0 {
+			return nil
+		}
+		if err := json.Unmarshal(envelope.Data, result); err != nil {
+			return fmt.Errorf("parse response data: %w", err)
+		}
+		return nil
+	}
+	return fmt.Errorf("exceeded %d retries: %w", maxRetries, lastErr)
+}
+
 // ListAll follows offset-based pagination and returns combined raw data pages.
 // It calls the provided path repeatedly, following paging.next until exhausted.
 // Each page's raw "data" JSON is appended to a combined JSON array in result.

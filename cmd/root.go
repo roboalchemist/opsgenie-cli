@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/api"
+	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/auth"
 	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/output"
 	"github.com/spf13/cobra"
 )
@@ -80,4 +82,73 @@ func DebugLog(format string, args ...interface{}) {
 	if flagDebug {
 		fmt.Fprintf(os.Stderr, "[debug] "+format+"\n", args...)
 	}
+}
+
+// newClient creates a new OpsGenie API client using the auth chain and global flags.
+func newClient() (*api.Client, error) {
+	apiKey, err := auth.GetAPIKey()
+	if err != nil {
+		return nil, fmt.Errorf("authentication failed: %w", err)
+	}
+	return api.NewClient(apiKey, flagRegion, flagDebug), nil
+}
+
+// Global --fields and --jq flags (added to data-returning commands)
+var (
+	flagFields string
+	flagJQ     string
+)
+
+// addOutputFlags adds --fields and --jq flags to a command.
+func addOutputFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVar(&flagFields, "fields", "", "Comma-separated list of fields to display (JSON output)")
+	cmd.Flags().StringVar(&flagJQ, "jq", "", "JQ expression to filter JSON output")
+}
+
+// getOutputOpts returns output options including fields and jq from flags.
+func getOutputOpts() output.Options {
+	opts := GetOutputOptions()
+	if flagFields != "" {
+		for _, f := range splitFields(flagFields) {
+			opts.Fields = append(opts.Fields, f)
+		}
+	}
+	opts.JQExpr = flagJQ
+	return opts
+}
+
+func splitFields(s string) []string {
+	var fields []string
+	for _, f := range splitComma(s) {
+		f = trimSpace(f)
+		if f != "" {
+			fields = append(fields, f)
+		}
+	}
+	return fields
+}
+
+func splitComma(s string) []string {
+	result := []string{}
+	current := ""
+	for _, c := range s {
+		if c == ',' {
+			result = append(result, current)
+			current = ""
+		} else {
+			current += string(c)
+		}
+	}
+	result = append(result, current)
+	return result
+}
+
+func trimSpace(s string) string {
+	for len(s) > 0 && (s[0] == ' ' || s[0] == '\t') {
+		s = s[1:]
+	}
+	for len(s) > 0 && (s[len(s)-1] == ' ' || s[len(s)-1] == '\t') {
+		s = s[:len(s)-1]
+	}
+	return s
 }

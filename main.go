@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"os"
 
 	"gitea.roboalch.com/roboalchemist/opsgenie-cli/cmd"
@@ -27,6 +28,7 @@ func main() {
 	cmd.SetReadmeContents(readmeContents)
 	cmd.SetSkillData(skillMD, commandsRef, skillFS)
 	if err := cmd.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 }

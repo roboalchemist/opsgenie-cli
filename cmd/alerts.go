@@ -24,6 +24,7 @@ var (
 	alertsListOffset int
 	alertsListQuery  string
 	alertsListSort   string
+	alertsListAll    bool
 )
 
 var alertsListCmd = &cobra.Command{
@@ -39,6 +40,8 @@ var alertsListCmd = &cobra.Command{
 		params := url.Values{}
 		if alertsListLimit > 0 {
 			params.Set("limit", strconv.Itoa(alertsListLimit))
+		} else if !alertsListAll {
+			params.Set("limit", "20")
 		}
 		if alertsListOffset > 0 {
 			params.Set("offset", strconv.Itoa(alertsListOffset))
@@ -51,8 +54,14 @@ var alertsListCmd = &cobra.Command{
 		}
 
 		var alerts []api.AlertResponse
-		if err := client.ListAll("/v2/alerts", params, &alerts); err != nil {
-			return err
+		if alertsListAll {
+			if err := client.ListAll("/v2/alerts", params, &alerts); err != nil {
+				return err
+			}
+		} else {
+			if err := client.GetWithParams("/v2/alerts", params, &alerts); err != nil {
+				return err
+			}
 		}
 
 		headers := []string{"ID", "Message", "Status", "Priority", "Acknowledged", "CreatedAt"}
@@ -74,7 +83,8 @@ var alertsListCmd = &cobra.Command{
 func init() {
 	alertsCmd.AddCommand(alertsListCmd)
 	addOutputFlags(alertsListCmd)
-	alertsListCmd.Flags().IntVar(&alertsListLimit, "limit", 0, "Maximum number of alerts to return (0 = all)")
+	alertsListCmd.Flags().IntVar(&alertsListLimit, "limit", 0, "Maximum number of alerts to return (default 20)")
+	alertsListCmd.Flags().BoolVar(&alertsListAll, "all", false, "Fetch all alerts (paginate through all pages)")
 	alertsListCmd.Flags().IntVar(&alertsListOffset, "offset", 0, "Start offset for pagination")
 	alertsListCmd.Flags().StringVar(&alertsListQuery, "query", "", "Search query (OpsGenie query syntax)")
 	alertsListCmd.Flags().StringVar(&alertsListSort, "sort", "", "Sort field (e.g. createdAt, updatedAt)")
