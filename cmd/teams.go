@@ -17,6 +17,11 @@ var teamsCmd = &cobra.Command{
 var teamsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all teams",
+	Example: `  # List teams as a table
+  opsgenie-cli teams list
+
+  # List teams as JSON and filter with jq
+  opsgenie-cli teams list --json | jq '.[].name'`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {

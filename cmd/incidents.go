@@ -31,6 +31,14 @@ var (
 var incidentsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List incidents",
+	Example: `  # List open incidents
+  opsgenie-cli incidents list --query "status:open"
+
+  # List P1 incidents as JSON
+  opsgenie-cli incidents list --query "status:open AND priority:P1" --json
+
+  # List with field filtering
+  opsgenie-cli incidents list --json --fields id,message,status,priority`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {

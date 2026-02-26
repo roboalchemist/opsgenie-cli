@@ -30,6 +30,14 @@ var (
 var alertsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List alerts",
+	Example: `  # List open P1 alerts as JSON
+  opsgenie-cli alerts list --query "status:open AND priority:P1" --json
+
+  # List with field filtering
+  opsgenie-cli alerts list --json --fields id,message,status
+
+  # Fetch all alerts (paginate)
+  opsgenie-cli alerts list --all --json`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {
@@ -95,6 +103,11 @@ func init() {
 var alertsGetCmd = &cobra.Command{
 	Use:   "get <id>",
 	Short: "Get an alert by ID",
+	Example: `  # Get alert details as JSON
+  opsgenie-cli alerts get abc123 --json
+
+  # Get specific fields only
+  opsgenie-cli alerts get abc123 --json --fields id,message,status,priority`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
@@ -150,6 +163,12 @@ var (
 var alertsCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new alert",
+	Example: `  # Create a P1 alert
+  opsgenie-cli alerts create --message "Database unreachable" --priority P1
+
+  # Create with description and responders
+  opsgenie-cli alerts create --message "Disk full" --description "Root volume at 99%" \
+    --priority P2 --responders team:platform`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if alertCreateMessage == "" {
 			return fmt.Errorf("--message is required")
@@ -228,6 +247,11 @@ func init() {
 var alertsAcknowledgeCmd = &cobra.Command{
 	Use:   "acknowledge <id>",
 	Short: "Acknowledge an alert",
+	Example: `  # Acknowledge an alert by ID
+  opsgenie-cli alerts acknowledge abc123
+
+  # Acknowledge and suppress progress output
+  opsgenie-cli alerts acknowledge abc123 --quiet`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()

@@ -17,6 +17,11 @@ var schedulesCmd = &cobra.Command{
 var schedulesListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all schedules",
+	Example: `  # List all schedules
+  opsgenie-cli schedules list
+
+  # List schedules as JSON with only id and name fields
+  opsgenie-cli schedules list --json --fields id,name`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {

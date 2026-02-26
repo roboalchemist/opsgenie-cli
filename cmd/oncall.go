@@ -16,6 +16,11 @@ var onCallCmd = &cobra.Command{
 var onCallGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get current on-call participants for a schedule",
+	Example: `  # Get current on-call for a schedule
+  opsgenie-cli on-call get --schedule my-schedule
+
+  # Get flat list of on-call participants as JSON
+  opsgenie-cli on-call get --schedule my-schedule --flat --json`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {

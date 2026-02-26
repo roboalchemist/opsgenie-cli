@@ -58,8 +58,8 @@ fi
 # 2. --help exits 0 and contains "Available Commands"
 check_output "--help contains 'Available Commands'" "Available Commands" --help
 
-# 3. --version exits 0 and outputs a version string
-check_output "--version outputs version string" "opsgenie-cli version" --version
+# 3. --version exits 0 and outputs a version string (GNU format: "name version")
+check_output "--version outputs version string" "opsgenie-cli v" --version
 
 # 4. docs exits 0 and outputs non-empty content
 check_nonempty "docs outputs non-empty content" docs

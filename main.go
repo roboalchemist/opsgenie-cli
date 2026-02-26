@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -28,7 +29,16 @@ func main() {
 	cmd.SetReadmeContents(readmeContents)
 	cmd.SetSkillData(skillMD, commandsRef, skillFS)
 	if err := cmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		if cmd.IsJSON() {
+			errJSON, _ := json.Marshal(map[string]interface{}{
+				"code":        "ERROR",
+				"message":     err.Error(),
+				"recoverable": false,
+			})
+			fmt.Fprintln(os.Stderr, string(errJSON))
+		} else {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		}
 		os.Exit(1)
 	}
 }

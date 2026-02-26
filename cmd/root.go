@@ -18,13 +18,34 @@ var (
 	flagPlaintext bool
 	flagNoColor   bool
 	flagDebug     bool
+	flagVerbose   bool
+	flagQuiet     bool
 	flagRegion    string
 )
 
 var rootCmd = &cobra.Command{
 	Use:           "opsgenie-cli",
 	Short:         "CLI for the OpsGenie REST API v2",
-	Long:          "CLI for the OpsGenie REST API v2. Manage alerts, incidents, teams, schedules, and more.",
+	Long: `opsgenie-cli — CLI for the OpsGenie REST API v2.
+
+Manage alerts, incidents, teams, schedules, on-call rotations, heartbeats,
+and more. All commands support --json output for scripting and agent use.
+
+Environment Variables:
+  OPSGENIE_API_KEY    API key for authentication (required)
+  OPSGENIE_API_URL    Override the API base URL (default: https://api.opsgenie.com)
+  NO_COLOR            Disable colored output when set
+
+Files:
+  ~/.opsgenie-cli-auth.json    Stored authentication credentials (mode 0600)
+
+Exit Status:
+  0   Success
+  1   User or correctable error
+  2   Usage error
+
+Report bugs to: https://gitea.roboalch.com/roboalchemist/opsgenie-cli/issues
+Home page: https://gitea.roboalch.com/roboalchemist/opsgenie-cli`,
 	Version:       appVersion,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -35,15 +56,24 @@ func init() {
 	pf.BoolVarP(&flagJSON, "json", "j", false, "JSON output")
 	pf.BoolVarP(&flagPlaintext, "plaintext", "p", false, "Tab-separated output for piping")
 	pf.BoolVar(&flagNoColor, "no-color", false, "Disable colored output")
-	pf.BoolVar(&flagDebug, "debug", false, "Verbose logging to stderr")
+	pf.BoolVarP(&flagVerbose, "verbose", "v", false, "Print more information about progress")
+	pf.BoolVar(&flagDebug, "debug", false, "Verbose debug logging to stderr")
+	pf.BoolVarP(&flagQuiet, "quiet", "q", false, "Suppress progress output")
+	pf.BoolVar(&flagQuiet, "silent", false, "Suppress progress output (synonym for --quiet)")
 	pf.StringVar(&flagRegion, "region", "us", "OpsGenie region (us or eu)")
+
+	rootCmd.SetVersionTemplate(`{{.Name}} {{.Version}}
+Copyright © 2026 roboalchemist
+License MIT: <https://opensource.org/licenses/MIT>
+`)
 }
 
 // GetOutputOptions builds output.Options from global flags.
 func GetOutputOptions() output.Options {
 	opts := output.Options{
 		NoColor: flagNoColor,
-		Debug:   flagDebug,
+		Debug:   flagDebug || flagVerbose,
+		Quiet:   flagQuiet,
 	}
 	switch {
 	case flagJSON:
@@ -54,6 +84,11 @@ func GetOutputOptions() output.Options {
 		opts.Mode = output.ModeTable
 	}
 	return opts
+}
+
+// IsJSON returns true if --json mode is active (used by main.go for structured error output).
+func IsJSON() bool {
+	return flagJSON
 }
 
 // GetRegion returns the configured region flag value.

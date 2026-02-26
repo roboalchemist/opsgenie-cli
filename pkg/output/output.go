@@ -25,6 +25,7 @@ type Options struct {
 	Mode    Mode
 	NoColor bool
 	Debug   bool
+	Quiet   bool     // If set, suppress progress/success messages to stderr
 	Fields  []string // If set, filter JSON output to only these fields
 	JQExpr  string   // If set, apply this jq expression to JSON output
 }
@@ -146,11 +147,16 @@ func Error(msg string, opts ...Options) {
 	}
 }
 
-// Success outputs a success message to stderr in green (unless NoColor is set).
+// Success outputs a success message to stderr in green (unless NoColor or Quiet is set).
 func Success(msg string, opts ...Options) {
 	noColor := false
+	quiet := false
 	if len(opts) > 0 {
 		noColor = opts[0].NoColor
+		quiet = opts[0].Quiet
+	}
+	if quiet {
+		return
 	}
 	if noColor || os.Getenv("NO_COLOR") != "" {
 		fmt.Fprintf(os.Stderr, "OK: %s\n", msg)

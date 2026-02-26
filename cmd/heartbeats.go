@@ -49,6 +49,11 @@ var heartbeatsCmd = &cobra.Command{
 var heartbeatsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all heartbeats",
+	Example: `  # List all heartbeats
+  opsgenie-cli heartbeats list
+
+  # List heartbeats as JSON
+  opsgenie-cli heartbeats list --json`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {
@@ -255,6 +260,11 @@ var heartbeatsDisableCmd = &cobra.Command{
 var heartbeatsPingCmd = &cobra.Command{
 	Use:   "ping <name>",
 	Short: "Ping a heartbeat",
+	Example: `  # Ping a heartbeat from a cron job
+  opsgenie-cli heartbeats ping my-service-heartbeat
+
+  # Ping silently (no output on success)
+  opsgenie-cli heartbeats ping my-service-heartbeat --quiet`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
