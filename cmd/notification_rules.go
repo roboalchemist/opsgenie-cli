@@ -75,7 +75,6 @@ var notificationRulesListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/users/"+userID+"/notification-rules", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -114,7 +113,6 @@ var notificationRulesGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/users/"+userID+"/notification-rules/"+ruleID, &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -156,7 +154,6 @@ var notificationRulesCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/users/"+userID+"/notification-rules", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -190,7 +187,6 @@ var notificationRulesUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Patch("/v2/users/"+userID+"/notification-rules/"+ruleID, body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -213,7 +209,6 @@ var notificationRulesDeleteCmd = &cobra.Command{
 		ruleID, _ := cmd.Flags().GetString("rule-id")
 
 		if err := client.Delete("/v2/users/"+userID+"/notification-rules/"+ruleID, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -236,7 +231,6 @@ var notificationRulesEnableCmd = &cobra.Command{
 		ruleID, _ := cmd.Flags().GetString("rule-id")
 
 		if err := client.Post("/v2/users/"+userID+"/notification-rules/"+ruleID+"/enable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -259,7 +253,6 @@ var notificationRulesDisableCmd = &cobra.Command{
 		ruleID, _ := cmd.Flags().GetString("rule-id")
 
 		if err := client.Post("/v2/users/"+userID+"/notification-rules/"+ruleID+"/disable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

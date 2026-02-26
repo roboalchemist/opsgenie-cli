@@ -31,7 +31,12 @@ type Options struct {
 
 // RenderTable renders data in the appropriate output mode.
 // headers and rows are used for table/plaintext modes; rawData is used for JSON mode.
+// If --jq or --fields is specified, JSON mode is implicitly enabled.
 func RenderTable(headers []string, rows [][]string, rawData interface{}, opts Options) error {
+	// Implicitly enable JSON mode when --jq or --fields is used
+	if opts.JQExpr != "" || len(opts.Fields) > 0 {
+		opts.Mode = ModeJSON
+	}
 	switch opts.Mode {
 	case ModeJSON:
 		return RenderJSON(rawData, opts)

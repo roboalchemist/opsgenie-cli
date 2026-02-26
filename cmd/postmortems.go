@@ -48,7 +48,6 @@ var postmortemsGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/postmortem/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -85,7 +84,6 @@ var postmortemsCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/postmortem", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -117,7 +115,6 @@ var postmortemsUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v2/postmortem/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -138,7 +135,6 @@ var postmortemsDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v2/postmortem/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

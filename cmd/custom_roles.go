@@ -53,7 +53,6 @@ var customRolesListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/roles", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -89,7 +88,6 @@ var customRolesGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/roles/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -131,7 +129,6 @@ var customRolesCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/roles", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -167,7 +164,6 @@ var customRolesUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v2/roles/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -188,7 +184,6 @@ var customRolesDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v2/roles/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

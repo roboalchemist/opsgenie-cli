@@ -50,7 +50,6 @@ var maintenanceListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/maintenance", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -88,7 +87,6 @@ var maintenanceGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/maintenance/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -134,7 +132,6 @@ var maintenanceCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v1/maintenance", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -178,7 +175,6 @@ var maintenanceUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v1/maintenance/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -199,7 +195,6 @@ var maintenanceDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v1/maintenance/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -220,7 +215,6 @@ var maintenanceCancelCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v1/maintenance/"+args[0]+"/cancel", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

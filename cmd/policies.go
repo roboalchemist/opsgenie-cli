@@ -54,7 +54,6 @@ var policiesListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/policies", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -91,7 +90,6 @@ var policiesGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/policies/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -132,7 +130,6 @@ var policiesCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v1/policies", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -168,7 +165,6 @@ var policiesUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v1/policies/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -189,7 +185,6 @@ var policiesDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v1/policies/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -210,7 +205,6 @@ var policiesEnableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v1/policies/"+args[0]+"/enable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -231,7 +225,6 @@ var policiesDisableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v1/policies/"+args[0]+"/disable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

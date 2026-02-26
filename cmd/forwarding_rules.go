@@ -55,7 +55,6 @@ var forwardingRulesListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/forwarding-rules", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -95,7 +94,6 @@ var forwardingRulesGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/forwarding-rules/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -139,7 +137,6 @@ var forwardingRulesCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/forwarding-rules", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -179,7 +176,6 @@ var forwardingRulesUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v2/forwarding-rules/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -200,7 +196,6 @@ var forwardingRulesDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v2/forwarding-rules/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

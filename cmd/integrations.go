@@ -57,7 +57,6 @@ var integrationsListCmd = &cobra.Command{
 			Data []api.IntegrationResponse `json:"data"`
 		}
 		if err := client.Get("/v2/integrations", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -94,7 +93,6 @@ var integrationsGetCmd = &cobra.Command{
 			Data api.IntegrationResponse `json:"data"`
 		}
 		if err := client.Get("/v2/integrations/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -135,7 +133,6 @@ var integrationsCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/integrations", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -171,7 +168,6 @@ var integrationsUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Put("/v2/integrations/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -192,7 +188,6 @@ var integrationsDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v2/integrations/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -213,7 +208,6 @@ var integrationsEnableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v2/integrations/"+args[0]+"/enable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -234,7 +228,6 @@ var integrationsDisableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v2/integrations/"+args[0]+"/disable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

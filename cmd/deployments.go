@@ -34,8 +34,14 @@ func init() {
 	deploymentsUpdateCmd.Flags().String("description", "", "Deployment description")
 	deploymentsUpdateCmd.Flags().String("environment", "", "Deployment environment")
 
+	// list flags (list delegates to search endpoint, service is required)
+	deploymentsListCmd.Flags().String("service", "", "Service ID to list deployments for (required)")
+	_ = deploymentsListCmd.MarkFlagRequired("service")
+	deploymentsListCmd.Flags().String("environment", "", "Filter by environment")
+
 	// search flags
-	deploymentsSearchCmd.Flags().String("service", "", "Filter by service name or ID")
+	deploymentsSearchCmd.Flags().String("service", "", "Service ID to search deployments for (required)")
+	_ = deploymentsSearchCmd.MarkFlagRequired("service")
 	deploymentsSearchCmd.Flags().String("environment", "", "Filter by environment")
 }
 
@@ -47,7 +53,8 @@ var deploymentsCmd = &cobra.Command{
 
 var deploymentsListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List all deployments",
+	Short: "List deployments for a service",
+	Long:  "List deployments for a service using the OpsGenie search endpoint. --service is required.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := newClient()
 		if err != nil {
@@ -55,11 +62,19 @@ var deploymentsListCmd = &cobra.Command{
 		}
 		opts := getOutputOpts()
 
+		params := url.Values{}
+		service, _ := cmd.Flags().GetString("service")
+		params.Set("serviceIds", service)
+		if environment, _ := cmd.Flags().GetString("environment"); environment != "" {
+			params.Set("environment", environment)
+		}
+
+		path := "/v2/deployments/search?" + params.Encode()
+
 		var resp struct {
 			Data []map[string]interface{} `json:"data"`
 		}
-		if err := client.Get("/v2/deployments", &resp); err != nil {
-			output.Error(err.Error(), opts)
+		if err := client.Get(path, &resp); err != nil {
 			return err
 		}
 
@@ -97,7 +112,6 @@ var deploymentsGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/deployments/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -144,7 +158,6 @@ var deploymentsCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/deployments", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -180,7 +193,6 @@ var deploymentsUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Patch("/v2/deployments/"+args[0]+"/update", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -200,23 +212,18 @@ var deploymentsSearchCmd = &cobra.Command{
 		opts := getOutputOpts()
 
 		params := url.Values{}
-		if service, _ := cmd.Flags().GetString("service"); service != "" {
-			params.Set("service", service)
-		}
+		service, _ := cmd.Flags().GetString("service")
+		params.Set("serviceIds", service)
 		if environment, _ := cmd.Flags().GetString("environment"); environment != "" {
 			params.Set("environment", environment)
 		}
 
-		path := "/v2/deployments/search"
-		if len(params) > 0 {
-			path += "?" + params.Encode()
-		}
+		path := "/v2/deployments/search?" + params.Encode()
 
 		var resp struct {
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get(path, &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

@@ -60,7 +60,6 @@ var heartbeatsListCmd = &cobra.Command{
 			Data []api.HeartbeatResponse `json:"data"`
 		}
 		if err := client.Get("/v2/heartbeats", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -98,7 +97,6 @@ var heartbeatsGetCmd = &cobra.Command{
 			Data api.HeartbeatResponse `json:"data"`
 		}
 		if err := client.Get("/v2/heartbeats/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -147,7 +145,6 @@ var heartbeatsCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/heartbeats", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -187,7 +184,6 @@ var heartbeatsUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Patch("/v2/heartbeats/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -208,7 +204,6 @@ var heartbeatsDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v2/heartbeats/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -229,7 +224,6 @@ var heartbeatsEnableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v2/heartbeats/"+args[0]+"/enable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -250,7 +244,6 @@ var heartbeatsDisableCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Post("/v2/heartbeats/"+args[0]+"/disable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -271,7 +264,6 @@ var heartbeatsPingCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Get("/v2/heartbeats/"+args[0]+"/ping", nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

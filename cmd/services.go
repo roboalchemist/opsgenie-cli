@@ -52,7 +52,6 @@ var servicesListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/services", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -89,7 +88,6 @@ var servicesGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v1/services/"+args[0], &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -132,7 +130,6 @@ var servicesCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v1/services", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -168,7 +165,6 @@ var servicesUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Patch("/v1/services/"+args[0], body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -189,7 +185,6 @@ var servicesDeleteCmd = &cobra.Command{
 		opts := GetOutputOptions()
 
 		if err := client.Delete("/v1/services/"+args[0], nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 

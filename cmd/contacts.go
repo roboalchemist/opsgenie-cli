@@ -72,7 +72,6 @@ var contactsListCmd = &cobra.Command{
 			Data []map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/users/"+userID+"/contacts", &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -111,7 +110,6 @@ var contactsGetCmd = &cobra.Command{
 			Data map[string]interface{} `json:"data"`
 		}
 		if err := client.Get("/v2/users/"+userID+"/contacts/"+contactID, &resp); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -151,7 +149,6 @@ var contactsCreateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Post("/v2/users/"+userID+"/contacts", body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -181,7 +178,6 @@ var contactsUpdateCmd = &cobra.Command{
 
 		var result map[string]interface{}
 		if err := client.Patch("/v2/users/"+userID+"/contacts/"+contactID, body, &result); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -204,7 +200,6 @@ var contactsDeleteCmd = &cobra.Command{
 		contactID, _ := cmd.Flags().GetString("contact-id")
 
 		if err := client.Delete("/v2/users/"+userID+"/contacts/"+contactID, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -227,7 +222,6 @@ var contactsEnableCmd = &cobra.Command{
 		contactID, _ := cmd.Flags().GetString("contact-id")
 
 		if err := client.Post("/v2/users/"+userID+"/contacts/"+contactID+"/enable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
@@ -250,7 +244,6 @@ var contactsDisableCmd = &cobra.Command{
 		contactID, _ := cmd.Flags().GetString("contact-id")
 
 		if err := client.Post("/v2/users/"+userID+"/contacts/"+contactID+"/disable", nil, nil); err != nil {
-			output.Error(err.Error(), opts)
 			return err
 		}
 
