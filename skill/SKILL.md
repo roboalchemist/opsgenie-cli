@@ -10,48 +10,73 @@ CLI for the OpsGenie REST API v2. Use when managing alerts, incidents, teams, sc
 
 **Binary**: `opsgenie-cli` | **Auth**: `OPSGENIE_API_KEY` env or `~/.opsgenie-cli-auth.json`
 
-## Setup
-
-```bash
-export OPSGENIE_API_KEY="your-api-key"   # Set API key
-opsgenie-cli account get                 # Verify connectivity
-```
-
-Or write to config file:
-```bash
-echo '{"api_key":"your-api-key"}' > ~/.opsgenie-cli-auth.json
-chmod 600 ~/.opsgenie-cli-auth.json
-```
-
-## Output Formats
-
-| Flag | Format | Use case |
-|------|--------|----------|
-| (none) | Colored table | Human terminal |
-| `-p` / `--plaintext` | Tab-separated | Piping, agents |
-| `-j` / `--json` | JSON | Programmatic parsing |
-
-**Always use `--json` for programmatic parsing.**
-
-## EU Region
-
-```bash
-opsgenie-cli --region eu alerts list
-```
-
 <examples>
 <example>
-Task: List open P1 alerts
+Task: List open P1 alerts as JSON
 
 ```bash
-opsgenie-cli alerts list --query "status:open AND priority:P1" --json
+opsgenie-cli alerts list --query "status:open AND priority:P1" --limit 5 --json
 ```
 
 Output:
 ```json
 [
-  {"id": "abc123", "message": "Database CPU high", "status": "open", "priority": "P1", ...}
+  {
+    "id": "bff3ccbf-c7dd-4d96-8...",
+    "message": "[Datadog] [P1] [Warn] Service vnet has a high error rate on env:prod2",
+    "status": "open",
+    "priority": "P1",
+    "acknowledged": true,
+    "createdAt": "2026-02-26T03:31:05.985Z"
+  }
 ]
+```
+</example>
+
+<example>
+Task: List alerts as a table with specific fields
+
+```bash
+opsgenie-cli alerts list --limit 2 --json --fields id,message,priority
+```
+
+Output:
+```json
+[
+  {
+    "id": "9fefe690-4ad4-48e0-b50e-c184e9e39c0f-1772089369305",
+    "message": "[Datadog] [P5] [Triggered] Index vnetsuite-services daily logging quota approaching",
+    "priority": "P5"
+  }
+]
+```
+</example>
+
+<example>
+Task: Extract a single value with --jq
+
+```bash
+opsgenie-cli alerts list --limit 1 --jq '.[0].message'
+```
+
+Output:
+```
+"[Datadog] [P5] [Triggered] Index vnetsuite-services daily logging quota approaching"
+```
+</example>
+
+<example>
+Task: Get total alert count
+
+```bash
+opsgenie-cli alerts count --json
+```
+
+Output:
+```json
+{
+  "count": 111830
+}
 ```
 </example>
 
@@ -77,96 +102,76 @@ opsgenie-cli on-call get --schedule "Primary On-Call" --json
 
 Output:
 ```json
-{"scheduleRef": {"name": "Primary On-Call"}, "onCallParticipants": [{"name": "alice@example.com", ...}]}
-```
-</example>
-
-<example>
-Task: List all teams
-
-```bash
-opsgenie-cli teams list
-```
-
-Output:
-```
-NAME           ID
-Platform       abc-123
-Backend        def-456
-```
-</example>
-
-<example>
-Task: Create a heartbeat monitor
-
-```bash
-opsgenie-cli heartbeats create --name "my-service-heartbeat" --interval 5 --interval-unit minutes
-```
-
-Output:
-```
-✓ Heartbeat "my-service-heartbeat" created
-```
-</example>
-
-<example>
-Task: List open incidents
-
-```bash
-opsgenie-cli incidents list --query "status:open" --json
-```
-
-Output:
-```json
-[{"id": "inc-1", "message": "Payment service down", "status": "open", "priority": "P1", ...}]
+{"onCallParticipants": [{"name": "alice@example.com", "type": "user"}]}
 ```
 </example>
 </examples>
+
+## Setup
+
+```bash
+export OPSGENIE_API_KEY="your-api-key"   # Required
+opsgenie-cli alerts list --limit 1       # Verify connectivity
+```
+
+Or config file: `echo '{"api_key":"..."}' > ~/.opsgenie-cli-auth.json && chmod 600 ~/.opsgenie-cli-auth.json`
+
+## Output Formats
+
+| Flag | Format | Use case |
+|------|--------|----------|
+| (none) | Colored table | Human terminal |
+| `-p` / `--plaintext` | Tab-separated | Piping, scripts |
+| `-j` / `--json` | JSON | Programmatic parsing |
+| `--fields` | Filtered JSON | Reduce output to specific fields |
+| `--jq` | JQ-filtered JSON | Complex filtering expressions |
+
+**Always use `--json` for programmatic parsing. `--fields` and `--jq` implicitly enable JSON mode.**
 
 ## Global Flags
 
 | Flag | Short | Description |
 |------|-------|-------------|
 | `--json` | `-j` | JSON output |
-| `--plaintext` | `-p` | Tab-separated output for piping |
+| `--plaintext` | `-p` | Tab-separated output |
 | `--no-color` | | Disable colored output |
-| `--debug` | | Verbose logging to stderr |
+| `--verbose` | `-v` | Verbose output |
+| `--debug` | | Debug logging to stderr |
+| `--quiet` | `-q` | Suppress progress output |
 | `--region` | | OpsGenie region: `us` (default) or `eu` |
-| `--fields` | | Comma-separated fields to display (JSON mode) |
-| `--jq` | | JQ expression to filter JSON output |
+| `--fields` | | Comma-separated fields (implicitly enables JSON) |
+| `--jq` | | JQ expression (implicitly enables JSON) |
 
 ## Authentication
 
-Priority order:
-1. `OPSGENIE_API_KEY` environment variable
-2. `~/.opsgenie-cli-auth.json` — `{"api_key": "..."}`
+Priority: `OPSGENIE_API_KEY` env var → `~/.opsgenie-cli-auth.json`
 
 ## Available Commands
 
 | Command | Description |
 |---------|-------------|
-| `account` | Account information |
-| `alerts` | Alert management (list, get, create, delete, acknowledge, close, snooze, escalate, assign, add-note, add-tags, remove-tags, count) |
-| `contacts` | User contact methods |
-| `custom-roles` | Custom role management |
-| `deployments` | Deployment tracking |
-| `escalations` | Escalation policies |
-| `forwarding-rules` | Notification forwarding rules |
-| `heartbeats` | Heartbeat monitors |
-| `incidents` | Incident management (list, get, create, close, resolve, reopen, delete, add-note, add-tags) |
-| `integrations` | Integrations (list, get, create, update, delete, enable, disable) |
-| `maintenance` | Maintenance windows |
-| `notification-rules` | User notification rules |
-| `on-call` | On-call schedule queries |
-| `policies` | Alert and notification policies |
-| `postmortems` | Postmortem management |
-| `schedule-overrides` | Schedule overrides |
-| `schedule-rotations` | Schedule rotations |
-| `schedules` | On-call schedules |
-| `services` | Service catalog |
-| `team-members` | Team membership |
-| `team-routing-rules` | Team routing rules |
-| `teams` | Team management |
-| `users` | User management |
+| `alerts` | list, get, create, delete, acknowledge, close, snooze, escalate, assign, add-note, add-tags, remove-tags, count |
+| `incidents` | list, get, create, close, resolve, reopen, delete, add-note, add-tags (**uses /v1 API**) |
+| `teams` | list, get, create, update, delete |
+| `team-members` | add, remove |
+| `team-routing-rules` | list, get, create, update, delete |
+| `users` | list, get, create, update, delete |
+| `contacts` | list, get, create, update, delete, enable, disable |
+| `notification-rules` | list, get, create, update, delete, enable, disable |
+| `schedules` | list, get, create, update, delete |
+| `schedule-rotations` | list, get, create, update, delete |
+| `schedule-overrides` | list, get, create, update, delete |
+| `on-call` | get, next |
+| `escalations` | list, get, create, update, delete |
+| `heartbeats` | list, get, create, update, delete, enable, disable, ping |
+| `integrations` | list, get, create, update, delete, enable, disable |
+| `maintenance` | list, get, create, update, delete, cancel |
+| `services` | list, get, create, update, delete |
+| `policies` | list, get, create, update, delete, enable, disable |
+| `forwarding-rules` | list, get, create, update, delete |
+| `custom-roles` | list, get, create, update, delete |
+| `postmortems` | get, create, update, delete |
+| `deployments` | list, get, create, update, search |
+| `account` | get |
 
-See [reference/commands.md](reference/commands.md) for full command reference with all flags.
+See [reference/commands.md](reference/commands.md) for full command reference with all flags and options.
