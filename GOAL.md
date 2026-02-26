@@ -2,14 +2,14 @@
 
 A comprehensive CLI tool for interacting with the Atlassian OpsGenie REST API v2, covering all 23+ resources (alerts, incidents, teams, schedules, users, heartbeats, escalations, integrations, and more). Hosted privately on Gitea with brew distribution via roboalchemist/private tap. Success = all 6 Phase 7 reviewers pass + brew formula installs + skill works in Claude Code.
 
-## Phase 1 — Foundation {⬜ NOT STARTED}
+## Phase 1 — Foundation {✅ COMPLETE}
 Scaffold + pkg/ infrastructure. Binary builds, --help works, auth works against live API.
 ### 1A — Scaffold: directory structure, go.mod, Makefile
 ### 1B — pkg/api: HTTP client with rate limiting, pagination, error handling, async request polling
 ### 1C — pkg/auth: env var → config file chain (OPSGENIE_API_KEY)
 ### 1D — pkg/output: table/JSON/plaintext + --fields + --jq
 
-## Phase 2 — Commands {⬜ NOT STARTED}
+## Phase 2 — Commands {✅ COMPLETE}
 All API resources implemented as cobra commands. Full CRUD per resource.
 ### 2A — cmd/root.go: global flags (--json, --plaintext, --no-color, --debug, --region), GNU standards, exit codes
 ### 2B — cmd/<resource>.go: one file per API resource
@@ -38,28 +38,28 @@ All API resources implemented as cobra commands. Full CRUD per resource.
 - account (get)
 ### 2C — Built-ins: docs, completion, skill print/add
 
-## Phase 3 — Tests {⬜ NOT STARTED}
+## Phase 3 — Tests {✅ COMPLETE}
 All three tiers pass. 90%+ unit coverage. Integration covers every command × every output flag.
 ### 3A — Unit tests (pkg/api, pkg/auth, pkg/output via httptest mocks)
 ### 3B — Integration tests (CRUDL lifecycle, cross-product, READONLY=1 gate — NOTE: we only have a RO key, so write tests always skip)
 ### 3C — Smoke tests (make test passes, no API key needed)
 
-## Phase 4 — Docs & Skill {⬜ NOT STARTED}
+## Phase 4 — Docs & Skill {✅ COMPLETE}
 ### 4A — skill/SKILL.md + skill/reference/commands.md
 ### 4B — README.md + llms.txt
 
-## Phase 5 — Release Automation {⬜ NOT STARTED}
+## Phase 5 — Release Automation {✅ COMPLETE}
 ### 5A — .gitea/workflows/bump-tap.yml
 ### 5B — CI workflow + required secrets documented
 ### 5C — Initial brew formula in roboalchemist/private tap
 
-## Phase 6 — Definition of Done {⬜ NOT STARTED}
+## Phase 6 — Definition of Done {✅ COMPLETE}
 Every check verified with actual output. No assumptions.
 
-## Phase 7 — Review (6 Reviewers) {⬜ NOT STARTED}
+## Phase 7 — Review (6 Reviewers) {✅ COMPLETE}
 All 6 reviewers pass. Loop on failures.
 
-## Phase 8 — Claude Integration {⬜ NOT STARTED}
+## Phase 8 — Claude Integration {✅ COMPLETE}
 Skill installed, enforcer updated, jset sync-all complete.
 
 ## Available Resources
