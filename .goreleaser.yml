@@ -12,6 +12,7 @@ builds:
       - -s -w -X main.version={{.Version}}
 brews:
   - name: opsgenie-cli
+    directory: Formula
     repository:
       owner: roboalchemist
       name: homebrew-tap
