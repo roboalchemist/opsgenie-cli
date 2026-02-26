@@ -135,3 +135,60 @@ func TestConfigPath_ReturnsExpectedPath(t *testing.T) {
 		t.Errorf("expected %q, got %q", expected, path)
 	}
 }
+
+func TestGetAPIKey_EmptyKeyInConfigFile(t *testing.T) {
+	// Config file exists but has an empty api_key
+	t.Setenv("OPSGENIE_API_KEY", "")
+
+	tmp := t.TempDir()
+	setHome(t, tmp)
+
+	cfg := AuthConfig{APIKey: ""}
+	data, _ := json.MarshalIndent(cfg, "", "  ")
+	cfgPath := filepath.Join(tmp, ".opsgenie-cli-auth.json")
+	if err := os.WriteFile(cfgPath, data, 0600); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
+
+	_, err := GetAPIKey()
+	if err == nil {
+		t.Fatal("expected error when config file has empty api_key, got nil")
+	}
+	if !contains(err.Error(), "empty") {
+		t.Errorf("expected error to mention 'empty', got %q", err.Error())
+	}
+}
+
+func TestSaveAuth_RoundTrip(t *testing.T) {
+	t.Setenv("OPSGENIE_API_KEY", "")
+
+	tmp := t.TempDir()
+	setHome(t, tmp)
+
+	cfg := AuthConfig{APIKey: "roundtrip-key"}
+	if err := SaveAuth(cfg); err != nil {
+		t.Fatalf("SaveAuth: %v", err)
+	}
+
+	// Now read it back via GetAPIKey
+	key, err := GetAPIKey()
+	if err != nil {
+		t.Fatalf("GetAPIKey after SaveAuth: %v", err)
+	}
+	if key != "roundtrip-key" {
+		t.Errorf("expected 'roundtrip-key', got %q", key)
+	}
+}
+
+// contains is a simple string containment helper for test assertions.
+func contains(s, substr string) bool {
+	return len(s) >= len(substr) && (s == substr || len(substr) == 0 ||
+		func() bool {
+			for i := 0; i <= len(s)-len(substr); i++ {
+				if s[i:i+len(substr)] == substr {
+					return true
+				}
+			}
+			return false
+		}())
+}
