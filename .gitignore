@@ -1,0 +1,17 @@
+# Binary
+opsgenie-cli
+dist/
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Test
+coverage.out
+*.test
+
+# Build
+*.exe
