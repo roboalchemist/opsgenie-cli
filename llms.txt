@@ -2,4 +2,6 @@
 url: gitea.roboalch.com/roboalchemist/opsgenie-cli
 
 # Docs
-- skill/SKILL.md
+- skill/SKILL.md: Claude Code skill with examples and quick reference
+- skill/reference/commands.md: Complete command reference for all 23+ resources
+- README.md: Installation, usage, and development guide
