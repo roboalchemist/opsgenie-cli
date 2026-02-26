@@ -1,0 +1,5 @@
+# opsgenie-cli
+url: gitea.roboalch.com/roboalchemist/opsgenie-cli
+
+# Docs
+- skill/SKILL.md

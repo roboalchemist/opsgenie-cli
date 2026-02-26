@@ -1,0 +1,35 @@
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
+var readmeContents string
+
+// SetReadmeContents sets the README content from main package.
+func SetReadmeContents(content string) {
+	readmeContents = content
+}
+
+var docsCmd = &cobra.Command{
+	Use:   "docs",
+	Short: "Display the full documentation",
+	Long: `Display the complete documentation from README.md.
+
+This command outputs the full documentation in markdown format,
+which can be piped to other tools or saved to a file.
+
+Examples:
+  opsgenie-cli docs                    # Display documentation
+  opsgenie-cli docs | less             # View with pager
+  opsgenie-cli docs > docs.md          # Save to file`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Print(readmeContents)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(docsCmd)
+}
