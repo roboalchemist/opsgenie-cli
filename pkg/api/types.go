@@ -189,3 +189,67 @@ type IntegrationResponse struct {
 	Type    string `json:"type,omitempty"`
 	Enabled bool   `json:"enabled"`
 }
+
+// AccountResponse represents the OpsGenie account info.
+type AccountResponse struct {
+	Name       string `json:"name"`
+	Plan       Plan   `json:"plan,omitempty"`
+	UserCount  int    `json:"userCount,omitempty"`
+	IsYearly   bool   `json:"isYearly,omitempty"`
+}
+
+// Plan holds the plan details for an account.
+type Plan struct {
+	MaxUserCount    int    `json:"maxUserCount,omitempty"`
+	Name            string `json:"name,omitempty"`
+	IsExpired       bool   `json:"isExpired,omitempty"`
+}
+
+// AlertCountResponse is the response from GET /v2/alerts/count.
+type AlertCountResponse struct {
+	Count int `json:"count"`
+}
+
+// TeamRoutingRuleResponse represents a single team routing rule.
+type TeamRoutingRuleResponse struct {
+	ID     string      `json:"id"`
+	Name   string      `json:"name,omitempty"`
+	Order  int         `json:"order,omitempty"`
+	Type   string      `json:"type,omitempty"`
+	Notify interface{} `json:"notify,omitempty"`
+}
+
+// ScheduleRotationResponse represents a single schedule rotation.
+type ScheduleRotationResponse struct {
+	ID           string      `json:"id"`
+	Name         string      `json:"name,omitempty"`
+	Type         string      `json:"type,omitempty"`
+	Length       int         `json:"length,omitempty"`
+	StartDate    string      `json:"startDate,omitempty"`
+	EndDate      string      `json:"endDate,omitempty"`
+	Participants []Responder `json:"participants,omitempty"`
+}
+
+// ScheduleOverrideResponse represents a single schedule override.
+type ScheduleOverrideResponse struct {
+	Alias     string      `json:"alias,omitempty"`
+	User      UserRef     `json:"user,omitempty"`
+	StartDate string      `json:"startDate,omitempty"`
+	EndDate   string      `json:"endDate,omitempty"`
+	Rotations interface{} `json:"rotations,omitempty"`
+}
+
+// OnCallParticipant is a participant in an on-call rotation.
+type OnCallParticipant struct {
+	ID          string `json:"id,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Type        string `json:"type,omitempty"`
+	OnCallStart string `json:"onCallStart,omitempty"`
+	OnCallEnd   string `json:"onCallEnd,omitempty"`
+}
+
+// OnCallResponse is the response from the on-call schedule endpoints.
+type OnCallResponse struct {
+	ScheduleRef        TeamRef             `json:"_parent,omitempty"`
+	OnCallParticipants []OnCallParticipant `json:"onCallParticipants,omitempty"`
+}
