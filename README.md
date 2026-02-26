@@ -7,20 +7,20 @@ Go CLI for the OpsGenie REST API v2. Manage alerts, incidents, teams, schedules,
 ### Homebrew (recommended)
 
 ```bash
-brew tap roboalchemist/private ssh://git@gitea.roboalch.com:2222/roboalchemist/homebrew-private.git
+brew tap roboalchemist/tap
 brew install opsgenie-cli
 ```
 
 ### Go Install
 
 ```bash
-go install gitea.roboalch.com/roboalchemist/opsgenie-cli@latest
+go install github.com/roboalchemist/opsgenie-cli@latest
 ```
 
 ### Build from Source
 
 ```bash
-git clone ssh://git@gitea.roboalch.com:2222/roboalchemist/opsgenie-cli.git
+git clone https://github.com/roboalchemist/opsgenie-cli.git
 cd opsgenie-cli
 make build
 ```

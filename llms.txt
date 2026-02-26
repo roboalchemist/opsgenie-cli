@@ -1,5 +1,5 @@
 # opsgenie-cli
-url: gitea.roboalch.com/roboalchemist/opsgenie-cli
+url: github.com/roboalchemist/opsgenie-cli
 
 # Docs
 - skill/SKILL.md: Claude Code skill with examples and quick reference

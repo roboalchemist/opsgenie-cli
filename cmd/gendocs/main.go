@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/cmd"
+	"github.com/roboalchemist/opsgenie-cli/cmd"
 	"github.com/spf13/cobra/doc"
 )
 

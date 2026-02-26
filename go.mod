@@ -1,4 +1,4 @@
-module gitea.roboalch.com/roboalchemist/opsgenie-cli
+module github.com/roboalchemist/opsgenie-cli
 
 go 1.25.0
 

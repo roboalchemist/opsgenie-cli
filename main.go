@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/cmd"
+	"github.com/roboalchemist/opsgenie-cli/cmd"
 )
 
 // version is set via ldflags at build time: -X main.version=x.y.z

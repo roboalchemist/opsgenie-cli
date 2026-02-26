@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/api"
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/auth"
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/output"
+	"github.com/roboalchemist/opsgenie-cli/pkg/api"
+	"github.com/roboalchemist/opsgenie-cli/pkg/auth"
+	"github.com/roboalchemist/opsgenie-cli/pkg/output"
 	"github.com/spf13/cobra"
 )
 
@@ -44,8 +44,8 @@ Exit Status:
   1   User or correctable error
   2   Usage error
 
-Report bugs to: https://gitea.roboalch.com/roboalchemist/opsgenie-cli/issues
-Home page: https://gitea.roboalch.com/roboalchemist/opsgenie-cli`,
+Report bugs to: https://github.com/roboalchemist/opsgenie-cli/issues
+Home page: https://github.com/roboalchemist/opsgenie-cli`,
 	Version:       appVersion,
 	SilenceUsage:  true,
 	SilenceErrors: true,

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"gitea.roboalch.com/roboalchemist/opsgenie-cli/pkg/output"
+	"github.com/roboalchemist/opsgenie-cli/pkg/output"
 	"github.com/spf13/cobra"
 )
 
