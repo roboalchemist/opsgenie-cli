@@ -17,23 +17,7 @@ clean:
 
 # Smoke tests - no API key needed
 test: build
-	@echo "=== $(BINARY_NAME) smoke tests ==="
-	@PASS=0; FAIL=0; \
-	run() { \
-		if ./$(BINARY_NAME) $$@ >/dev/null 2>&1; then \
-			echo "  PASS: $$*"; PASS=$$((PASS+1)); \
-		else \
-			echo "  FAIL: $$*"; FAIL=$$((FAIL+1)); \
-		fi; \
-	}; \
-	run --help; \
-	run --version; \
-	run docs; \
-	run skill print; \
-	run completion bash; \
-	echo ""; \
-	echo "Results: $$PASS passed, $$FAIL failed"; \
-	[ "$$FAIL" -eq 0 ]
+	@BINARY=./$(BINARY_NAME) bash smoke_test.sh
 
 # Unit tests
 test-unit:
