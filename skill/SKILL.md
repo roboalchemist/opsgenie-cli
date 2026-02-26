@@ -138,6 +138,7 @@ Or config file: `echo '{"api_key":"..."}' > ~/.opsgenie-cli-auth.json && chmod 6
 | `--verbose` | `-v` | Verbose output |
 | `--debug` | | Debug logging to stderr |
 | `--quiet` | `-q` | Suppress progress output |
+| `--silent` | | Synonym for `--quiet` |
 | `--region` | | OpsGenie region: `us` (default) or `eu` |
 | `--fields` | | Comma-separated fields (implicitly enables JSON) |
 | `--jq` | | JQ expression (implicitly enables JSON) |
@@ -145,6 +146,14 @@ Or config file: `echo '{"api_key":"..."}' > ~/.opsgenie-cli-auth.json && chmod 6
 ## Authentication
 
 Priority: `OPSGENIE_API_KEY` env var → `~/.opsgenie-cli-auth.json`
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `OPSGENIE_API_KEY` | API key for authentication (required) |
+| `OPSGENIE_API_URL` | Override API base URL (default: `https://api.opsgenie.com`) |
+| `NO_COLOR` | Disable colored output when set |
 
 ## Available Commands
 

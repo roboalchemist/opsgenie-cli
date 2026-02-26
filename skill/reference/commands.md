@@ -1,5 +1,19 @@
 # opsgenie-cli Command Reference
 
+## Table of Contents
+- [Global Flags](#global-flags)
+- [Alert Management](#alert-management)
+- [Incident Management](#incident-management)
+- [Team / User Management](#team--user-management)
+- [Scheduling](#scheduling)
+- [Operations](#operations)
+- [Escalations & Policies](#escalations--policies)
+- [Integrations & Routing](#integrations--routing)
+- [Notifications](#notifications)
+- [Incident Infrastructure](#incident-infrastructure)
+- [Account & Utilities](#account--utilities)
+- [API Behavior](#api-behavior)
+
 Complete reference for all commands. Global flags apply to every command.
 
 ## Global Flags
@@ -13,6 +27,7 @@ Complete reference for all commands. Global flags apply to every command.
 | `--region` | | `us` | OpsGenie region (`us` or `eu`) |
 | `--fields` | | | Comma-separated fields to display (JSON mode) |
 | `--jq` | | | JQ expression to filter JSON output |
+| `--silent` | | false | Synonym for `--quiet` |
 
 ---
 
@@ -337,13 +352,7 @@ Remove a member from a team.
 
 ### `users list`
 
-List all users (paginated).
-
-| Flag | Description |
-|------|-------------|
-| `--limit` | Max users per page |
-| `--offset` | Pagination offset |
-| `--query` | Search query |
+List all users. Fetches all users with automatic pagination. Supports `--fields` and `--jq` (plus global flags) for output filtering.
 
 ### `users get <id>`
 
@@ -356,10 +365,8 @@ Create a new user.
 | Flag | Required | Description |
 |------|----------|-------------|
 | `--username` | Yes | User email/username |
-| `--full-name` | Yes | Full display name |
-| `--role` | Yes | User role |
-| `--locale` | | Locale |
-| `--timezone` | | Timezone |
+| `--full-name` | | Full display name |
+| `--role` | | User role (default: "user") |
 
 ### `users update <id>`
 
@@ -785,6 +792,15 @@ Delete a contact.
 
 Enable a contact.
 
+### `contacts disable`
+
+Disable a contact.
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--user` | Yes | User ID or username |
+| `--contact-id` | Yes | Contact ID |
+
 ### `notification-rules list`
 
 List notification rules for a user.
@@ -812,6 +828,15 @@ Delete a notification rule.
 ### `notification-rules enable`
 
 Enable a notification rule.
+
+### `notification-rules disable`
+
+Disable a notification rule.
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--user` | Yes | User ID or username |
+| `--id` | Yes | Notification rule ID |
 
 ### `forwarding-rules list`
 
@@ -893,7 +918,12 @@ Delete a postmortem.
 
 ### `deployments list`
 
-List all deployments.
+List deployments for a service.
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--service` | Yes | Service ID to list deployments for |
+| `--environment` | | Filter by environment |
 
 ### `deployments get <id>`
 
@@ -906,8 +936,9 @@ Create a deployment record.
 | Flag | Required | Description |
 |------|----------|-------------|
 | `--name` | Yes | Deployment name |
-| `--version` | Yes | Version string |
-| `--description` | | Description |
+| `--description` | | Deployment description |
+| `--service-id` | | Service ID |
+| `--environment` | | Deployment environment |
 
 ### `deployments update <id>`
 
@@ -917,9 +948,29 @@ Update a deployment.
 
 Search deployments.
 
-| Flag | Description |
-|------|-------------|
-| `--query` | Search query |
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--service` | Yes | Service ID to search deployments for |
+| `--environment` | | Filter by environment |
+
+---
+
+## API Behavior
+
+### Rate Limiting
+The client automatically retries on 429 (rate limited) responses with exponential backoff, up to 3 retries.
+
+### Async Operations
+Some operations return HTTP 202 (Accepted). The client automatically polls until the operation completes.
+
+### Pagination
+List commands with `--all` use offset-based pagination to fetch all pages automatically.
+
+### Error Format
+API errors return structured JSON:
+```json
+{"code": "ERROR", "message": "OpsGenie API error 404: Alert with id [abc] not found.", "recoverable": false}
+```
 
 ---
 
