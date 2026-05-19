@@ -114,7 +114,9 @@ export OPSGENIE_API_KEY="your-api-key"   # Required
 opsgenie-cli alerts list --limit 1       # Verify connectivity
 ```
 
-Or config file: `echo '{"api_key":"..."}' > ~/.opsgenie-cli-auth.json && chmod 600 ~/.opsgenie-cli-auth.json`
+Or save to config file: `opsgenie-cli auth login --api-key YOUR_KEY`
+
+Verify connectivity: `opsgenie-cli auth test`
 
 ## Output Formats
 
@@ -182,5 +184,6 @@ Priority: `OPSGENIE_API_KEY` env var → `~/.opsgenie-cli-auth.json`
 | `postmortems` | get, create, update, delete |
 | `deployments` | list, get, create, update, search |
 | `account` | get |
+| `auth` | login, test |
 
 See [reference/commands.md](reference/commands.md) for full command reference with all flags and options.

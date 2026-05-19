@@ -976,6 +976,23 @@ API errors return structured JSON:
 
 ## Account & Utilities
 
+### `auth login`
+
+Save an API key to `~/.opsgenie-cli-auth.json`. Accepts `--api-key` flag, `OPSGENIE_API_KEY` env var, or interactive prompt.
+
+```bash
+opsgenie-cli auth login --api-key YOUR_KEY
+```
+
+### `auth test`
+
+Verify current credentials against the API and show account name and auth source.
+
+```bash
+opsgenie-cli auth test
+opsgenie-cli auth test --json
+```
+
 ### `account get`
 
 Get account information (verify connectivity).
